@@ -5,7 +5,7 @@ interface ILooseValue {
   diff: number;
 }
 
-const FRICTION_RATIO = 0.3;
+const FRICTION_RATIO = 0.15;
 
 export default class Inertia {
   private lastTime: number = null;
@@ -13,8 +13,6 @@ export default class Inertia {
   private lastValue: number = null;
 
   private speed: number = 0;
-
-  private stopFlag: boolean = false;
 
   public move(opt: number | { value?: number; diff?: number }): void {
     let value: number = null;
@@ -27,8 +25,6 @@ export default class Inertia {
       value = opt.value;
       diff = opt.diff;
     }
-
-    this.stopFlag = false;
 
     // 第一次 move 的时候，只有一个点，所以无法算出速度。
     if (this.lastTime === null || this.lastValue === null) {
@@ -101,7 +97,7 @@ export default class Inertia {
           });
         }
 
-        if (this.speed !== 0 && !this.stopFlag) {
+        if (this.speed !== 0) {
           this.loose({ frictionRatio, interval, minDecrease }, cb);
         }
       });
@@ -117,7 +113,7 @@ export default class Inertia {
           cb({ diff, value: this.lastValue });
         }
 
-        if (this.speed !== 0 && !this.stopFlag) {
+        if (this.speed !== 0) {
           this.loose({ frictionRatio, interval, minDecrease }, cb);
         }
       }, interval);
@@ -127,7 +123,7 @@ export default class Inertia {
   }
 
   public stop() {
-    this.stopFlag = true;
+    this.speed = 0;
   }
 
   private toFriction(
