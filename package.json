@@ -1,0 +1,21 @@
+{
+  "name": "simple-inertia",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tslint -c tslint.json -p tsconfig.json && rm -rf dist && tsc",
+    "preversion": "npm run build",
+    "version": "git add -A dist",
+    "postversion": "npm publish && git push --follow-tags"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tslint": "^5.12.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.2.4"
+  }
+}
