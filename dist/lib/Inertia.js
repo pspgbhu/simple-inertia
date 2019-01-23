@@ -1,13 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var now_1 = require("../utils/now");
-var FRICTION_RATIO = 0.3;
+var FRICTION_RATIO = 0.15;
 var Inertia = /** @class */ (function () {
     function Inertia() {
         this.lastTime = null;
         this.lastValue = null;
         this.speed = 0;
-        this.stopFlag = false;
     }
     Inertia.prototype.move = function (opt) {
         var value = null;
@@ -19,7 +18,6 @@ var Inertia = /** @class */ (function () {
             value = opt.value;
             diff = opt.diff;
         }
-        this.stopFlag = false;
         // 第一次 move 的时候，只有一个点，所以无法算出速度。
         if (this.lastTime === null || this.lastValue === null) {
             this.lastTime = now_1.default();
@@ -61,7 +59,7 @@ var Inertia = /** @class */ (function () {
                         value: _this.lastValue,
                     });
                 }
-                if (_this.speed !== 0 && !_this.stopFlag) {
+                if (_this.speed !== 0) {
                     _this.loose({ frictionRatio: frictionRatio, interval: interval, minDecrease: minDecrease }, cb);
                 }
             });
@@ -73,7 +71,7 @@ var Inertia = /** @class */ (function () {
                 if (typeof cb === 'function') {
                     cb({ diff: diff, value: _this.lastValue });
                 }
-                if (_this.speed !== 0 && !_this.stopFlag) {
+                if (_this.speed !== 0) {
                     _this.loose({ frictionRatio: frictionRatio, interval: interval, minDecrease: minDecrease }, cb);
                 }
             }, interval);
@@ -81,7 +79,7 @@ var Inertia = /** @class */ (function () {
         return this;
     };
     Inertia.prototype.stop = function () {
-        this.stopFlag = true;
+        this.speed = 0;
     };
     Inertia.prototype.toFriction = function (interval, frictionRatio, minDecrease) {
         var friction = (1 - frictionRatio) > 0 ? (1 - frictionRatio) : 0;

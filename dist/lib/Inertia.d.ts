@@ -6,7 +6,6 @@ export default class Inertia {
     private lastTime;
     private lastValue;
     private speed;
-    private stopFlag;
     move(opt: number | {
         value?: number;
         diff?: number;
